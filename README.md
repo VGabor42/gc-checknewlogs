@@ -1,0 +1,1 @@
+Python3 - geocaching.hu új logok lekérdezése adott felhasználó rejtéseinél
