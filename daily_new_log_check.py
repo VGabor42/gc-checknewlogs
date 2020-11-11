@@ -9,7 +9,7 @@
 # TODO: kimenet legyen formázott html? (nem túl szimpatikus ötlet)
 # TODO: tartsa nyilván a letöltött logokat JSON-ban a pontosság miatt? (kimenet marad txt)
 
-import json
+# import json
 import requests
 import datetime
 import os
