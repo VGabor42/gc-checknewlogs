@@ -6,8 +6,8 @@
 # Changelog:
 # 2020-11-09 - Start
 
-# TODO: kimenet legyen formázott html? (nem túl szimpatikus ötlet)
-# TODO: tartsa nyilván a letöltött logokat JSON-ban a pontosság miatt? (kimenet marad txt)
+# TODO: tartsa nyilván a letöltött logokat JSON-ban a még pontosabb lekérdezés miatt? (kimenet marad txt)
+# TODO: user_id ellenőrzése (név kiírása)
 
 import requests
 import datetime
@@ -41,7 +41,8 @@ def main():
         date_last_check = str(datetime.datetime.today() - datetime.timedelta(days=default_days))[:19]
 
     print('Legutóbbi ellenőrzés dátuma:', date_last_check)
-    print('Adatok lekérése a geocaching.hu oldalról...')
+    print('User id:', user_id)
+    print('\nAdatok lekérése a geocaching.hu oldalról...')
 
     gc_api_url = 'https://api.geocaching.hu/cachesbyuser?userid=' + user_id + '&own=true&fields=id'
     user_caches_data = requests.get(gc_api_url).json()  # lekérés
@@ -83,6 +84,10 @@ def main():
                         newlog_other.append('  {:<6} {} {}'.format(data['waypoint'], data['date'], data['member']))
                         counter += 1
 
+    # képernyőre egy kis tájékoztatás (mielőtt .append(nincs_ilyen_log) töténne
+    print('\n{} darab új logot találtam ({}:+, {}:-, {}:?, {}:!).\n\nAz eredményt a {} fájlban találod.'
+          .format(counter, (len(newlog_found) - 1), (len(newlog_notfound) - 1), (len(newlog_nopwd) - 1), (len(newlog_other) - 1), file_name))
+
     # amelyikhez nem került egy adat sem, ott az alábbi szöveg jelenik meg
     nincs_ilyen_log = '    ------ nincs új log'
     if len(newlog_found) == 1:  # ha csak a fejléc szöveg van benne
@@ -107,8 +112,6 @@ def main():
         for line in newlog_other:
             fid.write(line + '\n')
 
-    # képernyőre egy kis tájékoztatás
-    print('\n{} darab új logot találtam.\n\nAz eredményt a {} fájlban találod.'.format(counter, file_name))
     print('Kérlek, ne töröld, mert a következő lekérést a fájl alapján végzi a program!')
     print('\nAz előző lekérdezés eredményét a {} nevű fájlban találod (ha volt ilyen). Ezt bármikor törölheted.'
           .format(file_backup))
